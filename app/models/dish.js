@@ -11,7 +11,11 @@ const dishSchema = new mongoose.Schema({
     required: true
   },
   image: String,
-  count: Number
+  count: Number,
+  category: {
+    type: String,
+    required: true
+  }
 }, {
   timestamps: true
 })
