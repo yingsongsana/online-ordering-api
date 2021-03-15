@@ -3,7 +3,6 @@ const passport = require('passport')
 const Order = require('../models/order')
 
 const customErrors = require('../../lib/custom_errors')
-const order = require('../models/order')
 const handle404 = customErrors.handle404
 
 const requireOwnership = customErrors.requireOwnership
