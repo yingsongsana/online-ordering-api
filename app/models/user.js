@@ -6,9 +6,25 @@ const userSchema = new mongoose.Schema({
     required: true,
     unique: true
   },
-  hashedPassword: {
+  firstName: {
     type: String,
     required: true
+  },
+  lastName: {
+    type: String,
+    required: true
+  },
+  phone: {
+    type: Number,
+    required: true
+  },
+  role: {
+    type: String,
+    enum: ['admin', 'customer'],
+    default: 'customer'
+  },
+  hashedPassword: {
+    type: String
   },
   token: String
 }, {
