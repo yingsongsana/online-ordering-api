@@ -14,7 +14,7 @@ const router = express.Router()
 
 // INDEX
 // GET /dishes
-router.get('/dishes', requireToken, (req, res, next) => {
+router.get('/dishes', (req, res, next) => {
   Dish.find()
     .then(dishes => {
       return dishes.map(dish => dish.toObject())
@@ -25,7 +25,7 @@ router.get('/dishes', requireToken, (req, res, next) => {
 
 // SHOW
 // GET /dishes/:id
-router.get('/dishes/:id', requireToken, (req, res, next) => {
+router.get('/dishes/:id', (req, res, next) => {
   Dish.findById(req.params.id)
     .then(handle404)
     .then(dish => res.status(200).json({ dish: dish.toObject() }))
