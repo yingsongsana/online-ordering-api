@@ -30,7 +30,7 @@ router.get('/orders', requireToken, (req, res, next) => {
       return orders.map(order => order.toObject())
     })
     .then(orders => {
-      requireOwnership(req, order)
+      requireOwnership(req, orders)
       res.status(200).json({ orders: orders })
     })
     .catch(next)
