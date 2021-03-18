@@ -25,6 +25,35 @@ const requireToken = passport.authenticate('bearer', { session: false })
 // instantiate a router (mini app that only handles routes)
 const router = express.Router()
 
+// REGISTER GUEST
+// POST /register-guest
+// Does NOT require password. Will try to find an existing guest user with the same email first,
+// but will register a new guest user if doesn't already exist
+router.post('/register-guest', (req, res, next) => {
+  let user
+  // Phone# and name for picking up order can change over time
+  const phone = req.body.credentials.phone
+  const name = req.body.credentials.firstName
+
+  User.findOne({ email: req.body.credentials.email })
+    .then(record => {
+      // if user is not found in record/database
+      if (!record) {
+        // register the user
+        User.create(req.body.credentials)
+          .then(user => res.status(201).json({ user: user.toObject() }))
+          .catch(next)
+      }
+      user = record
+      // Update phone number & name
+      user.phone = phone
+      user.firstName = name
+      return user.save()
+    })
+    .then(user => res.status(200).json({ user: user.toObject() }))
+    .catch(next)
+})
+
 // SIGN UP
 // POST /sign-up
 router.post('/sign-up', (req, res, next) => {
