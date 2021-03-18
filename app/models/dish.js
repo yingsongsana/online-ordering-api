@@ -10,7 +10,7 @@ const dishSchema = new mongoose.Schema({
     type: Number,
     required: true
   },
-  image: String,
+  imageFile: String,
   count: Number,
   category: {
     type: String,
@@ -18,6 +18,14 @@ const dishSchema = new mongoose.Schema({
   }
 }, {
   timestamps: true
+})
+
+// Virtual property that generates the file URL location for images stored on AWS S3
+dishSchema.virtual('fileUrl').get(function () {
+  // Generating
+  const url = 'https://' + process.env.BUCKET_NAME + '.s3.amazonaws.com/' + this.imageFile
+  // Return the value
+  return url
 })
 
 module.exports = mongoose.model('Dish', dishSchema)
