@@ -1,7 +1,12 @@
 const express = require('express')
 const passport = require('passport')
 
+const multer = require('multer')
+const storage = multer.memoryStorage()
+const multerUpload = multer({ storage: storage })
+
 const Dish = require('../models/dish')
+const awsBucketApi = require('../lib/awsBucketApi')
 
 const customErrors = require('../../lib/custom_errors')
 const handle404 = customErrors.handle404
@@ -34,8 +39,20 @@ router.get('/dishes/:id', (req, res, next) => {
 
 // CREATE
 // POST /dishes
-router.post('/dishes', requireToken, (req, res, next) => {
-  Dish.create(req.body.dish)
+router.post('/dishes', multerUpload.single('file'), requireToken, (req, res, next) => {
+  console.log(req.file)
+
+  awsBucketApi(req.file)
+    .then(awsResponse => {
+      return Dish.create({
+        name: req.body.name,
+        description: req.body.description,
+        price: req.body.price,
+        imageFile: awsResponse.key,
+        count: req.body.count,
+        category: req.bosy.category
+      })
+    })
     .then(dish => {
       res.status(201).json({ dish: dish.toObject() })
     })
