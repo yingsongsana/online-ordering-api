@@ -17,7 +17,9 @@ const dishSchema = new mongoose.Schema({
     required: true
   }
 }, {
-  timestamps: true
+  timestamps: true,
+  toObject: { virtuals: true },
+  toJSON: { virtuals: true }
 })
 
 // Virtual property that generates the file URL location for images stored on AWS S3
